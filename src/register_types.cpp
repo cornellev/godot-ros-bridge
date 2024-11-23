@@ -2,6 +2,7 @@
 
 #include "gdexample.h"
 #include "summator.h"
+#include "godot_ros_node.h"
 
 #include <gdextension_interface.h>
 #include <godot_cpp/core/defs.hpp>
@@ -16,6 +17,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 
 	GDREGISTER_CLASS(GDExample);
 	GDREGISTER_CLASS(Summator);
+	GDREGISTER_CLASS(GodotRosNode);
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {
