@@ -1,0 +1,4 @@
+*.dblite
+bin/*
+src/*.os
+.DS_store
