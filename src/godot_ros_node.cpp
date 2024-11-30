@@ -39,9 +39,15 @@ void GodotRosNode::_bind_methods()
     ClassDB::bind_static_method(StringName("GodotRosNode"), D_METHOD("Shutdown"), &GodotRosNode::Shutdown);
     // ClassDB::bind_method(D_METHOD("shutdown"), &GodotRosNode::shutdown);
 
+    ClassDB::bind_method(D_METHOD("spin_some"), &GodotRosNode::spin_some);
     // ClassDB::bind_method(D_METHOD("add", "value"), &GodotRos::add);
 	// ClassDB::bind_method(D_METHOD("reset"), &Summator::reset);
 	// ClassDB::bind_method(D_METHOD("shutdown"), &Summator::get_total);
+}
+
+void GodotRosNode::spin_some()
+{
+    rclcpp::spin_some(m_node);
 }
 
 // void GodotRosNode::startup()
