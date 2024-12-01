@@ -10,14 +10,9 @@
 #include <rclcpp/rclcpp.hpp>
 
 namespace godot {
-    class GodotRosPublisher;
-    class GodotRosSubscriber;
+
 
 class GodotRosNode : public RefCounted {
-
-// This is dumb I should just make the shared pointer public at this rate
-friend class GodotRosPublisher;
-friend class GodotRosSubscriber;
 
 // Godot Stuff
 GDCLASS(GodotRosNode, RefCounted)
@@ -26,7 +21,7 @@ protected:
 
 // Static methods
 public:
-    // Could extract these into another class that extends from Node2D called GlobalRosManager something
+    // TODO: Could extract these into another class that extends from Node2D called GlobalRosManager something
     static void Shutdown();
     static void Startup();
 
@@ -39,7 +34,8 @@ public:
     // about Godot and ROS threading internals, spin_some will have to do for now
     void spin_some();
 
-private:
+public:
+    // TODO: make & test a getter method for this
     std::shared_ptr<rclcpp::Node> m_node;
 
 };
