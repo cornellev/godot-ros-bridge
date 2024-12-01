@@ -17,10 +17,13 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 		return;
 	}
 
-	GDREGISTER_CLASS(GDExample);
-	GDREGISTER_CLASS(Summator);
+	// GDREGISTER_CLASS(GDExample);
+	// GDREGISTER_CLASS(Summator);
+
 	GDREGISTER_CLASS(GodotRosNode);
-	GDREGISTER_CLASS(GodotRosPublisher);
+	GDREGISTER_CLASS(GodotRosStringPublisher);
+	GDREGISTER_CLASS(LaserScan);
+	GDREGISTER_CLASS(GodotRosLaserScanPublisher);
 	GDREGISTER_CLASS(GodotRosSubscriber);
 }
 
