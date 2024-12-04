@@ -10,6 +10,8 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
+#include <std_msgs/msg/float32.hpp>
+#include <std_msgs/msg/float64.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 
 namespace godot
@@ -71,7 +73,6 @@ private:
 
     void init(const Ref<GodotRosNode>& node, const godot::String& topic_name, uint64_t qos=10)
     {    
-        std::cout << "Initializing ros publisher\n";
         m_pub = node->m_node->create_publisher<RosMsg>(topic_name.utf8().get_data(), qos);
     }
 
@@ -83,10 +84,85 @@ private:
     rclcpp::Publisher<RosMsg>::SharedPtr m_pub;
 };
 
+class GodotRosFloat64Publisher : public RefCounted
+{
+    using RosMsg = std_msgs::msg::Float64;
+    using GodotType = double; // screw it
+
+    GDCLASS(GodotRosFloat64Publisher, RefCounted);
+    
+    static void _bind_methods()
+    {
+        ClassDB::bind_method(D_METHOD("init", "node", "topic_name", "qos"), &GodotRosFloat64Publisher::init);
+        ClassDB::bind_method(D_METHOD("publish"), &GodotRosFloat64Publisher::publish);
+    }
+
+private:
+    RosMsg godot_data_to_ros_msg(const GodotType& godot_data)
+    {
+        auto msg = RosMsg();
+        msg.data = godot_data;
+        return msg;
+    }
+
+    void init(const Ref<GodotRosNode>& node, const godot::String& topic_name, uint64_t qos=10)
+    {    
+        m_pub = node->m_node->create_publisher<RosMsg>(topic_name.utf8().get_data(), qos);
+    }
+
+    void publish(const GodotType& godot_data)
+    {
+        m_pub->publish(godot_data_to_ros_msg(godot_data));
+    }
+
+    rclcpp::Publisher<RosMsg>::SharedPtr m_pub;
+};
+
+class GodotRosFloat32Publisher : public RefCounted
+{
+    using RosMsg = std_msgs::msg::Float32;
+    using GodotType = float; // screw it
+
+    GDCLASS(GodotRosFloat32Publisher, RefCounted);
+    
+    static void _bind_methods()
+    {
+        ClassDB::bind_method(D_METHOD("init", "node", "topic_name", "qos"), &GodotRosFloat32Publisher::init);
+        ClassDB::bind_method(D_METHOD("publish"), &GodotRosFloat32Publisher::publish);
+    }
+
+private:
+    RosMsg godot_data_to_ros_msg(const GodotType& godot_data)
+    {
+        auto msg = RosMsg();
+        msg.data = godot_data;
+        return msg;
+    }
+
+    void init(const Ref<GodotRosNode>& node, const godot::String& topic_name, uint64_t qos=10)
+    {    
+        m_pub = node->m_node->create_publisher<RosMsg>(topic_name.utf8().get_data(), qos);
+    }
+
+    void publish(const GodotType& godot_data)
+    {
+        m_pub->publish(godot_data_to_ros_msg(godot_data));
+    }
+
+    rclcpp::Publisher<RosMsg>::SharedPtr m_pub;
+};
+
+/*
+TODO: make header message type for godot
+(handle the built in types: https://wiki.ros.org/msg)
+
+swap std::string frame_id with the afforementioned header type
+*/
 
 struct LaserScan : public RefCounted {
     GDCLASS(LaserScan, RefCounted);
 public:
+    std::string frame_id;
     float angle_min;
     float angle_max;
     float angle_increment;
