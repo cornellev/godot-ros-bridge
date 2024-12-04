@@ -127,7 +127,12 @@ public:
         ClassDB::bind_method(D_METHOD("get_intensities"), &LaserScan::get_intensities);
         ClassDB::bind_method(D_METHOD("set_intensities", "values"), &LaserScan::set_intensities);
 
+        ClassDB::bind_method(D_METHOD("get_frame_id"), &LaserScan::get_frame_id);
+        ClassDB::bind_method(D_METHOD("set_frame_id", "value"), &LaserScan::set_frame_id);
     }
+
+    godot::String get_frame_id() const { return godot::String(frame_id.c_str()); }
+    void set_frame_id(const godot::String& value) { frame_id = value.utf8().get_data(); }
 
     // Getters and Setters for each property
     float get_angle_min() const { return angle_min; }
@@ -214,7 +219,7 @@ private:
     RosMsg godot_data_to_ros_msg(const GodotType& godot_laser_scan)
     {
         auto msg = RosMsg();
-        msg.header.frame_id = "map"; // TODO: frame_id can't be empty
+        msg.header.frame_id = godot_laser_scan->frame_id;
         msg.angle_min = godot_laser_scan->angle_min;
         msg.angle_max = godot_laser_scan->angle_max;
         msg.angle_increment = godot_laser_scan->angle_increment;
