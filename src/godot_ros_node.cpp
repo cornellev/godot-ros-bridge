@@ -15,19 +15,16 @@ GodotRosNode::GodotRosNode()
 
 void GodotRosNode::Startup()
 {
-    std::cout << "called from GodotRosNode::Startup\n";
     rclcpp::init(0, nullptr);
 }
 
 void GodotRosNode::Shutdown()
 {
-    std::cout << "called from GodotRosNode::Shutdown\n";
     rclcpp::shutdown();
 }
 
 GodotRosNode::~GodotRosNode()
 {
-    std::cout << "called from GodotRosNode::~GodotRosNode\n";
 }
 
 // GodotRosNode::gett_string_publisher

@@ -22,7 +22,6 @@ GodotRosSubscriber::~GodotRosSubscriber()
 
 void GodotRosSubscriber::init(const Ref<GodotRosNode>& node, const String& topic_name)
 {
-    std::cout << "initializing godot ros subscriber\n";
     m_sub = node->m_node->create_subscription<RosType>(
         topic_name.utf8().get_data(), 
         10, 
@@ -31,6 +30,4 @@ void GodotRosSubscriber::init(const Ref<GodotRosNode>& node, const String& topic
             // Emit the signal when data is received
             emit_signal("message_received", String(msg->data.c_str()));
         });
-    std::cout << "done init godot ros subscriber\n";
-
 }

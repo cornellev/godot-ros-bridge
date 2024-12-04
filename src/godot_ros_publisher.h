@@ -230,7 +230,6 @@ private:
 
     void init(const Ref<GodotRosNode>& node, const godot::String& topic_name, uint64_t qos=10)
     {    
-        std::cout << "Initializing ros publisher\n";
         m_pub = node->m_node->create_publisher<RosMsg>(topic_name.utf8().get_data(), qos);
     }
 
