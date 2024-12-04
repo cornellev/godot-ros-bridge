@@ -17,14 +17,24 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 		return;
 	}
 
-	// GDREGISTER_CLASS(GDExample);
-	// GDREGISTER_CLASS(Summator);
+	/* 
+	TODO: use a system that can generate templates (try replacing the macro they provide and just 
+	putting it in a template base class)
+	*/
 
+	// Ros Messages
+	GDREGISTER_CLASS(LaserScan);
+
+	// Ros Publishers
 	GDREGISTER_CLASS(GodotRosNode);
 	GDREGISTER_CLASS(GodotRosStringPublisher);
-	GDREGISTER_CLASS(LaserScan);
+	GDREGISTER_CLASS(GodotRosFloat32Publisher);
+	GDREGISTER_CLASS(GodotRosFloat64Publisher);
 	GDREGISTER_CLASS(GodotRosLaserScanPublisher);
+
+	// Ros Subscribers
 	GDREGISTER_CLASS(GodotRosSubscriber);
+
 }
 
 void uninitialize_example_module(ModuleInitializationLevel p_level) {
