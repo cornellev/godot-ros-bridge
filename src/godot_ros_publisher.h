@@ -324,35 +324,11 @@ public:
     const godot::Quaternion& get_orientation() { return orientation; }
     void set_orientation(const godot::Quaternion& orientation) { this->orientation = orientation; }
 
-    const godot::Vector3 get_angular_velocity() { return angular_velocity; }
+    const godot::Vector3& get_angular_velocity() { return angular_velocity; }
     void set_angular_velocity(const godot::Vector3& angular_velocity) { this->angular_velocity = angular_velocity; }
 
-    const godot::Vector3 get_linear_acceleration() { return linear_acceleration; }
-    void set_linear_acceleration(const godot::Vector3& linear_velocity) { this->linear_acceleration = linear_velocity; }
-
-public:
-    sensor_msgs::msg::Imu to_ros_msg()
-    {
-        auto msg = sensor_msgs::msg::Imu();
-
-        msg.orientation = geometry_msgs::msg::Quaternion();
-        msg.orientation.x = orientation.x;
-        msg.orientation.y = orientation.y;
-        msg.orientation.z = orientation.z;
-        msg.orientation.w = orientation.w;
-
-        msg.angular_velocity = geometry_msgs::msg::Vector3();
-        msg.angular_velocity.x = angular_velocity.x;
-        msg.angular_velocity.y = angular_velocity.y;
-        msg.angular_velocity.z = angular_velocity.z;
-
-        msg.linear_acceleration = geometry_msgs::msg::Vector3();
-        msg.linear_acceleration.x = linear_acceleration.x;
-        msg.linear_acceleration.y = linear_acceleration.y;
-        msg.linear_acceleration.z = linear_acceleration.z;
-
-        return msg;
-    }
+    const godot::Vector3& get_linear_acceleration() { return linear_acceleration; }
+    void set_linear_acceleration(const godot::Vector3& linear_acceleration) { this->linear_acceleration = linear_acceleration; }
 };
 
 class GodotRosImuPublisher : public RefCounted
@@ -369,6 +345,28 @@ class GodotRosImuPublisher : public RefCounted
     }
 
 private:
+    RosMsg godot_data_to_ros_msg(const GodotType& godot_laser_scan)
+    {
+        auto msg = RosMsg();
+
+        msg.orientation = geometry_msgs::msg::Quaternion();
+        msg.orientation.x = godot_laser_scan->orientation.x;
+        msg.orientation.y = godot_laser_scan->orientation.y;
+        msg.orientation.z = godot_laser_scan->orientation.z;
+        msg.orientation.w = godot_laser_scan->orientation.w;
+
+        msg.angular_velocity = geometry_msgs::msg::Vector3();
+        msg.angular_velocity.x = godot_laser_scan->angular_velocity.x;
+        msg.angular_velocity.y = godot_laser_scan->angular_velocity.y;
+        msg.angular_velocity.z = godot_laser_scan->angular_velocity.z;
+
+        msg.linear_acceleration = geometry_msgs::msg::Vector3();
+        msg.linear_acceleration.x = godot_laser_scan->linear_acceleration.x;
+        msg.linear_acceleration.y = godot_laser_scan->linear_acceleration.y;
+        msg.linear_acceleration.z = godot_laser_scan->linear_acceleration.z;
+
+        return msg;
+    }
 
     void init(const Ref<GodotRosNode>& node, const godot::String& topic_name, uint64_t qos=10)
     {    
@@ -377,7 +375,7 @@ private:
 
     void publish(const GodotType& godot_data)
     {
-        m_pub->publish(godot_data->to_ros_msg());
+        m_pub->publish(godot_data_to_ros_msg(godot_data));
     }
 
     rclcpp::Publisher<RosMsg>::SharedPtr m_pub;
