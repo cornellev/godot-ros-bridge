@@ -17,38 +17,6 @@
 namespace godot
 {
 
-// template <typename Publisher>
-// void bind_publisher_methods()
-// {
-//     ClassDB::bind_method(D_METHOD("init", "node", "topic_name", "qos"), &Publisher::init);
-//     ClassDB::bind_method(D_METHOD("publish"), &Publisher::publish);
-// }
-
-// template <typename RosMsg, typename GodotType>
-// class GodotRosPublisher : public RefCounted
-// {
-// public:
-
-//     virtual void init(const Ref<GodotRosNode>& node, const godot::String& topic_name, uint64_t qos=10)
-//     {    
-//         std::cout << "Initializing ros publisher\n";
-//         m_pub = node->m_node->create_publisher<RosMsg>(topic_name.utf8().get_data(), qos);
-//     }
-
-//     virtual void publish(const GodotType& godot_data)
-//     {
-//         m_pub->publish(godot_data_to_ros_msg(godot_data));
-//     }
-
-// private:
-//     virtual RosMsg godot_data_to_ros_msg(const GodotType& godot_data) = 0;
-//     typename rclcpp::Publisher<RosMsg>::SharedPtr m_pub;
-
-// };
-
-// #define GODOT_ROS_PUBLISHER(TypeName, _RosMsg, _GodotType, _ConversionFunc) \
-//     class Godot##
-
 class GodotRosStringPublisher : public RefCounted
 {
     using RosMsg = std_msgs::msg::String;
