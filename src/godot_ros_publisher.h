@@ -12,6 +12,9 @@
 #include <std_msgs/msg/string.hpp>
 #include <std_msgs/msg/float32.hpp>
 #include <std_msgs/msg/float64.hpp>
+#include <geometry_msgs/msg/quaternion.hpp>
+#include <geometry_msgs/msg/vector3.hpp>
+#include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 
 namespace godot
@@ -289,6 +292,97 @@ private:
 
     rclcpp::Publisher<RosMsg>::SharedPtr m_pub;
 };
+
+class Imu : public RefCounted
+{
+    GDCLASS(Imu, RefCounted);
+protected:
+    static void _bind_methods()
+    {
+        ClassDB::bind_method(D_METHOD("get_frame_id"), &Imu::get_frame_id);
+        ClassDB::bind_method(D_METHOD("set_frame_id", "frame_id"), &Imu::set_frame_id);
+    
+        ClassDB::bind_method(D_METHOD("get_orientation"), &Imu::get_orientation);
+        ClassDB::bind_method(D_METHOD("set_orientation", "orientation"), &Imu::set_orientation);
+
+        ClassDB::bind_method(D_METHOD("get_angular_velocity"), &Imu::get_angular_velocity);
+        ClassDB::bind_method(D_METHOD("set_angular_velocity", "angular_velocity"), &Imu::set_angular_velocity);
+
+        ClassDB::bind_method(D_METHOD("get_linear_acceleration"), &Imu::get_angular_velocity);
+        ClassDB::bind_method(D_METHOD("set_linear_acceleration", "linear_acceleration"), &Imu::set_linear_acceleration);
+    }
+
+public:
+    godot::String frame_id;
+    godot::Quaternion orientation;
+    godot::Vector3 angular_velocity;
+    godot::Vector3 linear_acceleration;
+
+    const godot::String &get_frame_id() { return frame_id; }
+    void set_frame_id(const godot::String& frame_id) { this->frame_id = frame_id; }
+
+    const godot::Quaternion& get_orientation() { return orientation; }
+    void set_orientation(const godot::Quaternion& orientation) { this->orientation = orientation; }
+
+    const godot::Vector3 get_angular_velocity() { return angular_velocity; }
+    void set_angular_velocity(const godot::Vector3& angular_velocity) { this->angular_velocity = angular_velocity; }
+
+    const godot::Vector3 get_linear_acceleration() { return linear_acceleration; }
+    void set_linear_acceleration(const godot::Vector3& linear_velocity) { this->linear_acceleration = linear_velocity; }
+
+public:
+    sensor_msgs::msg::Imu to_ros_msg()
+    {
+        auto msg = sensor_msgs::msg::Imu();
+
+        msg.orientation = geometry_msgs::msg::Quaternion();
+        msg.orientation.x = orientation.x;
+        msg.orientation.y = orientation.y;
+        msg.orientation.z = orientation.z;
+        msg.orientation.w = orientation.w;
+
+        msg.angular_velocity = geometry_msgs::msg::Vector3();
+        msg.angular_velocity.x = angular_velocity.x;
+        msg.angular_velocity.y = angular_velocity.y;
+        msg.angular_velocity.z = angular_velocity.z;
+
+        msg.linear_acceleration = geometry_msgs::msg::Vector3();
+        msg.linear_acceleration.x = linear_acceleration.x;
+        msg.linear_acceleration.y = linear_acceleration.y;
+        msg.linear_acceleration.z = linear_acceleration.z;
+
+        return msg;
+    }
+};
+
+class GodotRosImuPublisher : public RefCounted
+{
+    using RosMsg = sensor_msgs::msg::Imu;
+    using GodotType = Ref<Imu>;
+
+    GDCLASS(GodotRosImuPublisher, RefCounted);
+
+    static void _bind_methods()
+    {
+        ClassDB::bind_method(D_METHOD("init", "node", "topic_name", "qos"), &GodotRosImuPublisher::init);
+        ClassDB::bind_method(D_METHOD("publish"), &GodotRosImuPublisher::publish);
+    }
+
+private:
+
+    void init(const Ref<GodotRosNode>& node, const godot::String& topic_name, uint64_t qos=10)
+    {    
+        m_pub = node->m_node->create_publisher<RosMsg>(topic_name.utf8().get_data(), qos);
+    }
+
+    void publish(const GodotType& godot_data)
+    {
+        m_pub->publish(godot_data->to_ros_msg());
+    }
+
+    rclcpp::Publisher<RosMsg>::SharedPtr m_pub;
+};
+
 
 }
 
