@@ -6,17 +6,17 @@ protected:
 
     static void _bind_methods()
     {
-        # Bind getters and seters to godot
+        // Bind getters and seters to godot
 $2
 
     }
 
 public:
 
-    # Declare fields (in c++ types)
+    // Declare fields (in c++ types)
 $3
 
-    # Declare getters and setters (accept and return Godot types)
+    // Declare getters and setters (accept and return Godot types)
 $4
 
 };

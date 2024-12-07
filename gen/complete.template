@@ -1,0 +1,26 @@
+#ifndef __GODOT_ROS_BINDING__
+#define __GODOT_ROS_BINDING__
+
+// TODO: programatically generate imports
+
+#include "godot_ros_node.h"
+
+#include <godot_cpp/classes/ref.hpp>
+#include <godot_cpp/godot.hpp>
+#include <godot_cpp/variant/variant.hpp>
+
+
+#include <rclcpp/rclcpp.hpp>
+#include <std_msgs/msg/string.hpp>
+#include <std_msgs/msg/float32.hpp>
+#include <std_msgs/msg/float64.hpp>
+#include <geometry_msgs/msg/quaternion.hpp>
+#include <geometry_msgs/msg/vector3.hpp>
+#include <sensor_msgs/msg/imu.hpp>
+#include <sensor_msgs/msg/laser_scan.hpp>
+
+
+namespace godot {
+$1
+}
+#endif
