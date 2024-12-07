@@ -349,6 +349,8 @@ private:
     {
         auto msg = RosMsg();
 
+        msg.header.frame_id = godot_laser_scan->frame_id.utf8().get_data();
+
         msg.orientation = geometry_msgs::msg::Quaternion();
         msg.orientation.x = godot_laser_scan->orientation.x;
         msg.orientation.y = godot_laser_scan->orientation.y;

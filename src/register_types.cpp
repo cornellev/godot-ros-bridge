@@ -24,6 +24,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 
 	// Ros Messages
 	GDREGISTER_CLASS(LaserScan);
+	GDREGISTER_CLASS(Imu);
 
 	// Ros Publishers
 	GDREGISTER_CLASS(GodotRosNode);
