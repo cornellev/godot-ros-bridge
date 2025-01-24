@@ -6,6 +6,7 @@
 #include <godot_cpp/classes/ref.hpp>
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/variant/variant.hpp>
+#include <godot_cpp/classes/image.hpp>
 
 
 #include <rclcpp/rclcpp.hpp>
@@ -16,6 +17,7 @@
 #include <geometry_msgs/msg/vector3.hpp>
 #include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
+#include <sensor_msgs/msg/image.hpp>
 
 namespace godot
 {
@@ -381,6 +383,52 @@ private:
     }
 
     rclcpp::Publisher<RosMsg>::SharedPtr m_pub;
+};
+
+class GodotRosImagePublisher : public RefCounted {
+    GDCLASS(GodotRosImagePublisher, RefCounted);
+
+protected:
+    static void _bind_methods() {
+        ClassDB::bind_method(D_METHOD("init", "node", "topic_name", "qos"), &GodotRosImagePublisher::init);
+        ClassDB::bind_method(D_METHOD("publish", "image", "frame_id"), &GodotRosImagePublisher::publish);
+    }
+
+private:
+    using RosMsg = sensor_msgs::msg::Image;
+    using GodotType = Ref<godot::Image>;
+
+    rclcpp::Publisher<RosMsg>::SharedPtr m_pub;
+
+    RosMsg godot_image_to_ros_msg(const GodotType& godot_image, const String& frame_id) {
+        auto msg = RosMsg();
+
+        // Set the frame ID
+        msg.header.frame_id = frame_id.utf8().get_data();
+
+        // Fill in ROS Image message fields
+        msg.height = godot_image->get_height();
+        msg.width = godot_image->get_width();
+        msg.encoding = "rgba8";  // Assuming Godot Image uses RGBA8 format
+        msg.step = msg.width * 4; // 4 bytes per pixel (RGBA)
+
+        // Copy pixel data
+        const uint8_t* godot_data = godot_image->get_data().ptr();
+        msg.data.assign(godot_data, godot_data + (msg.height * msg.step));
+
+        return msg;
+    }
+
+public:
+    void init(const Ref<GodotRosNode>& node, const String& topic_name, uint64_t qos = 10) {
+        // Create a publisher for the Image topic
+        m_pub = node->m_node->create_publisher<RosMsg>(topic_name.utf8().get_data(), qos);
+    }
+
+    void publish(const GodotType& godot_image, const String& frame_id) {
+        // Publish the ROS Image message
+        m_pub->publish(godot_image_to_ros_msg(godot_image, frame_id));
+    }
 };
 
 

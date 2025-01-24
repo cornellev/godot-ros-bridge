@@ -33,6 +33,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 	GDREGISTER_CLASS(GodotRosFloat64Publisher);
 	GDREGISTER_CLASS(GodotRosLaserScanPublisher);
 	GDREGISTER_CLASS(GodotRosImuPublisher);
+	GDREGISTER_CLASS(GodotRosImagePublisher);
 
 	// Ros Subscribers
 	GDREGISTER_CLASS(GodotRosStringSubscriber);
