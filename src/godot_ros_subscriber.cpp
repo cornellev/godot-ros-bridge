@@ -3,24 +3,24 @@ using namespace godot;
 
 #include <iostream>
 
-void GodotRosSubscriber::_bind_methods()
+void GodotRosStringSubscriber::_bind_methods()
 {
-    ClassDB::bind_method(D_METHOD("init", "node", "topic"), &GodotRosSubscriber::init);
+    ClassDB::bind_method(D_METHOD("init", "node", "topic"), &GodotRosStringSubscriber::init);
 
     ADD_SIGNAL(MethodInfo("message_received", PropertyInfo(Variant::STRING, "data")));
 }
 
-GodotRosSubscriber::GodotRosSubscriber()
+GodotRosStringSubscriber::GodotRosStringSubscriber()
 {
     // std::cout
 }
 
-GodotRosSubscriber::~GodotRosSubscriber()
+GodotRosStringSubscriber::~GodotRosStringSubscriber()
 {
     
 }
 
-void GodotRosSubscriber::init(const Ref<GodotRosNode>& node, const String& topic_name)
+void GodotRosStringSubscriber::init(const Ref<GodotRosNode>& node, const String& topic_name)
 {
     m_sub = node->m_node->create_subscription<RosType>(
         topic_name.utf8().get_data(), 

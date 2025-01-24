@@ -35,7 +35,11 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 	GDREGISTER_CLASS(GodotRosImuPublisher);
 
 	// Ros Subscribers
-	GDREGISTER_CLASS(GodotRosSubscriber);
+	GDREGISTER_CLASS(GodotRosStringSubscriber);
+	GDREGISTER_CLASS(GodotRosInt32Subscriber);
+	GDREGISTER_CLASS(GodotRosFloat32Subscriber);
+	GDREGISTER_CLASS(GodotRosFloat64Subscriber);
+	GDREGISTER_CLASS(GodotRosFloat32ArraySubscriber);
 
 }
 
