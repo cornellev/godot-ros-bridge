@@ -4,6 +4,10 @@ Godot extension that brings a subset of ROS functionality to Godot projects.
 
 ## Instructions
 
+For using a release build, download and extract in `cev-godot-sim/bin`.
+
+Instructions for building from source:
+
 ### Installation
 
 ```
