@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import platform
 
 EnsureSConsVersion(4, 0)
 
@@ -10,6 +11,12 @@ except Exception:
     # Default tools with no platform defaults to gnu toolchain.
     # We apply platform specific toolchains via our custom tools.
     env = Environment(tools=["default"], PLATFORM="")
+
+architecture = platform.machine()
+if architecture == "aarch64":
+    architecture = "arm64"
+print("Compiling for architecture: " + architecture)
+
 
 env.PrependENVPath("PATH", os.getenv("PATH"))
 
@@ -50,16 +57,17 @@ ros_libs = getLibNames(ros_lib_path)
 # Add include paths and libraries
 env.Append(CPPPATH=[godot_cpp_gdextension_path, godot_cpp_include, godot_cpp_bindings_include, "src/"] + ros_includes)
 env.Append(LIBPATH=[ros_lib_path, godot_cpp_lib_path])
-env.Append(LIBS=["stdc++", "libgodot-cpp.linux.template_debug.arm64.a"] + ros_libs)
+env.Append(LIBS=["stdc++", f"libgodot-cpp.linux.template_debug.{architecture}.a"] + ros_libs)
 
 # Specify your source files
 sources = Glob("src/*.cpp")
 
 # Compile your shared library (only going to compile for linux lol)
 env["SHLIBSUFFIX"] = ".so"
-env["suffix"] = ".linux.template_debug.arm64"  
+env["suffix"] = f".linux.template_debug.{architecture}"  
 library = env.SharedLibrary(
     "bin/libgdexample{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
+    # "/mnt/hgfs/Programming/cev/cev-godot-sim/bin/libgdexample{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
     source=sources,
 )
 
