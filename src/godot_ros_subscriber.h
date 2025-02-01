@@ -19,14 +19,26 @@ class GodotRosStringSubscriber : public RefCounted
 // Godot stuff
     GDCLASS(GodotRosStringSubscriber, RefCounted);
 protected:
-    static void _bind_methods();
+    static void _bind_methods()
+    {
+        ClassDB::bind_method(D_METHOD("init", "node", "topic"), &GodotRosStringSubscriber::init);
+
+        ADD_SIGNAL(MethodInfo("message_received", PropertyInfo(Variant::STRING, "data")));
+    }
 
 public:
-    // Shouldn't need a constructor / deconstructor
-    GodotRosStringSubscriber();
-    ~GodotRosStringSubscriber();
 
-    void init(const Ref<GodotRosNode>& node, const String& topic_name);
+    void init(const Ref<GodotRosNode>& node, const String& topic_name)
+    {
+        m_sub = node->m_node->create_subscription<RosType>(
+            topic_name.utf8().get_data(), 
+            10, 
+            // use shared_ptr<RosType> instead
+            [this](const std_msgs::msg::String::SharedPtr msg) {
+                // Emit the signal when data is received
+                emit_signal("message_received", String(msg->data.c_str()));
+            });
+    }
 
 private:
     using RosType = std_msgs::msg::String;

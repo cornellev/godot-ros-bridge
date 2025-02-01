@@ -1,7 +1,6 @@
 #include "register_types.h"
 
-#include "gdexample.h"
-#include "summator.h"
+#include "godot_ros_types.h"
 #include "godot_ros_node.h"
 #include "godot_ros_publisher.h"
 #include "godot_ros_subscriber.h"
@@ -16,11 +15,6 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
 		return;
 	}
-
-	/* 
-	TODO: use a system that can generate templates (try replacing the macro they provide and just 
-	putting it in a template base class)
-	*/
 
 	// Ros Messages
 	GDREGISTER_CLASS(LaserScan);
