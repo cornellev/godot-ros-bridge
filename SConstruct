@@ -67,7 +67,6 @@ env["SHLIBSUFFIX"] = ".so"
 env["suffix"] = f".linux.template_debug.{architecture}"  
 library = env.SharedLibrary(
     "bin/libgdexample{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
-    # "/mnt/hgfs/Programming/cev/cev-godot-sim/bin/libgdexample{}{}".format(env["suffix"], env["SHLIBSUFFIX"]),
     source=sources,
 )
 
