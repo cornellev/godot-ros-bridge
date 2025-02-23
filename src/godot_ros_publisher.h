@@ -8,6 +8,7 @@
 #include <godot_cpp/godot.hpp>
 #include <godot_cpp/variant/variant.hpp>
 #include <godot_cpp/classes/image.hpp>
+#include <godot_cpp/variant/packed_float64_array.hpp>
 
 #include <rclcpp/rclcpp.hpp>
 #include <std_msgs/msg/string.hpp>
@@ -18,6 +19,7 @@
 #include <sensor_msgs/msg/imu.hpp>
 #include <sensor_msgs/msg/laser_scan.hpp>
 #include <sensor_msgs/msg/image.hpp>
+#include <std_msgs/msg/float64_multi_array.hpp>
 
 namespace godot
 {
@@ -265,6 +267,44 @@ public:
         // Publish the ROS Image message
         m_pub->publish(godot_image_to_ros_msg(godot_image, frame_id));
     }
+};
+
+class GodotRosFloat64ArrayPublisher : public RefCounted {
+    using RosMsg = std_msgs::msg::Float64MultiArray;
+    using GodotType = PackedFloat64Array;
+
+    GDCLASS(GodotRosFloat64ArrayPublisher, RefCounted);
+
+protected:
+    static void _bind_methods() {
+        // Bind the init and publish methods for use from Godot scripts
+        ClassDB::bind_method(D_METHOD("init", "node", "topic_name", "qos"), &GodotRosFloat64ArrayPublisher::init);
+        ClassDB::bind_method(D_METHOD("publish"), &GodotRosFloat64ArrayPublisher::publish);
+    }
+
+private:
+    // Convert a Godot PoolRealArray to a ROS Float64MultiArray message.
+    RosMsg godot_data_to_ros_msg(const GodotType &godot_array) {
+        auto msg = RosMsg();
+        // Loop through the Godot array and push each element into the ROS message's data vector.
+        for (int i = 0; i < godot_array.size(); ++i) {
+            msg.data.push_back(godot_array[i]);
+        }
+        return msg;
+    }
+
+    // Initialize the publisher with the given ROS node, topic name, and QoS.
+    void init(const Ref<GodotRosNode> &node, const String &topic_name, uint64_t qos = 10) {
+        m_pub = node->m_node->create_publisher<RosMsg>(topic_name.utf8().get_data(), qos);
+    }
+
+    // Publish a PoolRealArray by converting it into a ROS message.
+    void publish(const GodotType &godot_array) {
+        m_pub->publish(godot_data_to_ros_msg(godot_array));
+    }
+
+    // The ROS publisher object.
+    rclcpp::Publisher<RosMsg>::SharedPtr m_pub;
 };
 
 
