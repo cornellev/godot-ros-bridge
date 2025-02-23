@@ -16,12 +16,15 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 		return;
 	}
 
+	// Ros Node
+	GDREGISTER_CLASS(GodotRosNode);
+	
 	// Ros Messages
 	GDREGISTER_CLASS(LaserScan);
 	GDREGISTER_CLASS(Imu);
+	// TODO: add cev-msgs 
 
 	// Ros Publishers
-	GDREGISTER_CLASS(GodotRosNode);
 	GDREGISTER_CLASS(GodotRosStringPublisher);
 	GDREGISTER_CLASS(GodotRosFloat32Publisher);
 	GDREGISTER_CLASS(GodotRosFloat64Publisher);
@@ -31,6 +34,7 @@ void initialize_example_module(ModuleInitializationLevel p_level) {
 	GDREGISTER_CLASS(GodotRosImagePublisher);
 
 	// Ros Subscribers
+	GDREGISTER_CLASS(GodotRosBoolSubscriber);
 	GDREGISTER_CLASS(GodotRosStringSubscriber);
 	GDREGISTER_CLASS(GodotRosInt32Subscriber);
 	GDREGISTER_CLASS(GodotRosFloat32Subscriber);

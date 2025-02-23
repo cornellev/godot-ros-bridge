@@ -10,9 +10,38 @@
 #include <std_msgs/msg/float64.hpp>
 #include <std_msgs/msg/float32.hpp>
 #include <std_msgs/msg/float32_multi_array.hpp>
+#include <std_msgs/msg/bool.hpp>
 
 namespace godot
 {
+class GodotRosBoolSubscriber : public RefCounted {
+    GDCLASS(GodotRosBoolSubscriber, RefCounted);
+
+protected:
+    static void _bind_methods() {
+        ClassDB::bind_method(D_METHOD("init", "node", "topic"), &GodotRosBoolSubscriber::init);
+        ADD_SIGNAL(MethodInfo("message_received", PropertyInfo(Variant::BOOL, "data")));
+    }
+
+public:
+    void init(const Ref<GodotRosNode>& node, const String& topic_name) {
+        m_sub = node->m_node->create_subscription<RosType>(
+            topic_name.utf8().get_data(),
+            10,
+            [this](const std_msgs::msg::Bool::SharedPtr msg) {
+                // Emit the signal with the received boolean value
+                emit_signal("message_received", msg->data);
+            }
+        );
+    }
+
+private:
+    using RosType = std_msgs::msg::Bool;
+    using GodotType = bool; // The corresponding Godot type for booleans
+    rclcpp::Subscription<RosType>::SharedPtr m_sub;
+};
+
+
 class GodotRosStringSubscriber : public RefCounted
 {
 
